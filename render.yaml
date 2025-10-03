@@ -4,19 +4,15 @@ services:
     runtime: docker
     plan: free
     region: oregon
-    # Si el repo es otro, puedes añadir: repo: https://github.com/usuario/testlink-1.9.0-render
     envVars:
       - key: TL_TIMEZONE
         value: America/La_Paz
-      # (Opcional) Inyecta la URL interna de la DB como variable:
       - key: DATABASE_URL
         fromDatabase:
           name: testlink-db
-          property: connectionString
+          property: internalConnectionString   # mejor la URL interna
 
 databases:
   - name: testlink-db
     plan: free
     region: oregon
-    diskSizeGB: 1
-    # Versión: deja la default (13–17); usaremos conexión interna.
