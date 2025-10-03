@@ -1320,7 +1320,7 @@ require_once('configCheck.php');
 // @TODO: basehref should be defined by installation script or stored from login in $_SESSION
 /*  20070106 - franciscom - this statement it's not 100% right
     better use $_SESSION['basehref'] in the scripts. */
-define('TL_BASE_HREF', get_home_url());
+define('TL_BASE_HREF', 'https://testlink-web.onrender.com/');
 
 
 clearstatcache();
