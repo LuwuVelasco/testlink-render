@@ -10,7 +10,7 @@ services:
       - key: DATABASE_URL
         fromDatabase:
           name: testlink-db
-          property: internalConnectionString   # mejor la URL interna
+          property: connectionString   # <-- válido
 
 databases:
   - name: testlink-db
