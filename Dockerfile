@@ -19,16 +19,23 @@ RUN set -eux; \
   a2enmod rewrite; \
   rm -rf /var/lib/apt/lists/*
 
-# Dile a Apache/PHP que la petición original es HTTPS (Render usa X-Forwarded-Proto)
+# Decirle a Apache/PHP que la petición original es HTTPS (Render usa X-Forwarded-Proto)
 RUN a2enmod headers && \
     printf 'SetEnvIf X-Forwarded-Proto "^https$" HTTPS=on\n' > /etc/apache2/conf-available/forwarded-https.conf && \
     a2enconf forwarded-https
 
-
-# Zona horaria
+# Zona horaria de PHP
 RUN echo "date.timezone = America/La_Paz" > /usr/local/etc/php/conf.d/timezone.ini
 
-# Copia código de TestLink
+# Overrides PHP útiles (subidas/memoria/timeout)
+RUN { \
+  echo 'upload_max_filesize = 32M'; \
+  echo 'post_max_size = 32M'; \
+  echo 'memory_limit = 256M'; \
+  echo 'max_execution_time = 120'; \
+} > /usr/local/etc/php/conf.d/zz-overrides.ini
+
+# Copia el código de TestLink
 COPY . /var/www/html/
 
 # Normaliza CRLF por si run.sh viene de Windows
