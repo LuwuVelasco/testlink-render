@@ -19,6 +19,12 @@ RUN set -eux; \
   a2enmod rewrite; \
   rm -rf /var/lib/apt/lists/*
 
+# Dile a Apache/PHP que la petición original es HTTPS (Render usa X-Forwarded-Proto)
+RUN a2enmod headers && \
+    printf 'SetEnvIf X-Forwarded-Proto "^https$" HTTPS=on\n' > /etc/apache2/conf-available/forwarded-https.conf && \
+    a2enconf forwarded-https
+
+
 # Zona horaria
 RUN echo "date.timezone = America/La_Paz" > /usr/local/etc/php/conf.d/timezone.ini
 
