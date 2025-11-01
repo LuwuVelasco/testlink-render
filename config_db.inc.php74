@@ -28,7 +28,8 @@ if (empty($db_host) || empty($db_name) || empty($db_user) || empty($db_pass)) {
     die('ERROR: Variables de entorno de base de datos no están definidas correctamente');
 }
 
-// Para Neon con PHP 7.4, incluir el puerto en el host
+// Definir constantes para TestLink
+// Con PHP 7.4 y libpq moderno, podemos incluir el puerto en el host
 define('DB_HOST', $db_host . ':' . $db_port);
 define('DB_NAME', $db_name);
 define('DB_USER', $db_user);
@@ -39,7 +40,7 @@ define('DB_CHARSET','UTF-8');
 // Configurar SSL para Neon
 putenv('PGSSLMODE=require');
 
-// Con PHP 7.4 y libpq moderno, podemos usar PGOPTIONS para el endpoint de Neon
+// Con PHP 7.4, podemos usar PGOPTIONS para el endpoint de Neon
 $pg_options = getenv('PGOPTIONS');
 if (!empty($pg_options)) {
     // Asegurar formato correcto

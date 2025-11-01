@@ -6,10 +6,6 @@ $port     = getenv('TL_DB_PORT') ?: '5432';
 $dbname   = getenv('TL_DB_NAME');
 $user     = getenv('TL_DB_USER');
 $pass     = getenv('TL_DB_PASS');
-$endpoint = getenv('PGOPTIONS') ?: 'endpoint=ep-silent-sun-afd0euia';
-
-// Limpiar el endpoint
-$endpoint = str_replace('endpoint=', '', $endpoint);
 
 echo "<p><strong>Variables de entorno:</strong></p>";
 echo "Host: $host<br>";
@@ -17,19 +13,42 @@ echo "Port: $port<br>";
 echo "Database: $dbname<br>";
 echo "User: $user<br>";
 echo "Password: " . (empty($pass) ? 'NO DEFINIDA' : '*** (definida)') . "<br>";
-echo "Endpoint: $endpoint<br>";
 echo "PGSSLMODE: " . getenv('PGSSLMODE') . "<br>";
+echo "Versión PHP: " . phpversion() . "<br>";
+echo "Extensión pgsql: " . (extension_loaded('pgsql') ? 'Cargada' : 'NO Cargada') . "<br>";
 
-$conn_str = "host=$host port=$port dbname=$dbname user=$user password=$pass ".
-            "sslmode=require options='endpoint=$endpoint'";
+echo "<p><strong>Intentando conexión (método 1 - sin opciones endpoint)...</strong></p>";
 
-echo "<p><strong>Intentando conexión...</strong></p>";
+// Método 1: Sin opciones de endpoint (PHP 5.6 no las soporta bien)
+$conn_str = "host=$host port=$port dbname=$dbname user=$user password=$pass sslmode=require";
+
+echo "<p style='font-size:12px'>Connection string: " . str_replace($pass, '***', $conn_str) . "</p>";
 
 $c = @pg_connect($conn_str);
 if(!$c){ 
-    echo "<p style='color:red'><strong>ERROR:</strong> " . pg_last_error() . "</p>"; 
-    echo "<p>Conexión string (sin password): host=$host port=$port dbname=$dbname user=$user sslmode=require options='endpoint=$endpoint'</p>";
-    exit; 
+    $error = pg_last_error();
+    if (empty($error)) {
+        $error = "No se pudo establecer conexión (libpq no retornó error específico)";
+    }
+    echo "<p style='color:red'><strong>ERROR método 1:</strong> $error</p>"; 
+    
+    // Método 2: Intentar sin sslmode
+    echo "<p><strong>Intentando conexión (método 2 - sin SSL explícito)...</strong></p>";
+    $conn_str2 = "host=$host port=$port dbname=$dbname user=$user password=$pass";
+    $c = @pg_connect($conn_str2);
+    
+    if (!$c) {
+        echo "<p style='color:red'><strong>ERROR método 2:</strong> " . pg_last_error() . "</p>";
+        echo "<hr>";
+        echo "<p><strong>DIAGNÓSTICO:</strong></p>";
+        echo "<ul>";
+        echo "<li>PHP 5.6 con libpq antiguo puede no soportar correctamente Neon</li>";
+        echo "<li>Verifica que el host sea el correcto en Neon dashboard</li>";
+        echo "<li>Verifica que la password sea correcta</li>";
+        echo "<li>Considera actualizar a PHP 7.x o superior</li>";
+        echo "</ul>";
+        exit;
+    }
 }
 
 echo "<p style='color:green'><strong>✓ Conexión exitosa!</strong></p>";
@@ -48,4 +67,4 @@ if ($r2) {
 }
 
 pg_close($c);
-echo "<p style='color:green'><strong>Todo OK!</strong></p>";
+echo "<p style='color:green'><strong>✅ Todo OK! La conexión funciona.</strong></p>";

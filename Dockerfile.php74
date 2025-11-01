@@ -1,7 +1,7 @@
 # ---- TestLink 1.9.0 en PHP 7.4 + Apache (Render) con Neon PostgreSQL ----
 FROM php:7.4-apache
 
-# Instalar dependencias para PHP 7.4
+# Actualizar repositorios e instalar dependencias
 RUN set -eux; \
   apt-get update; \
   DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
