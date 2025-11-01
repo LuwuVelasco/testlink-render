@@ -12,6 +12,5 @@ define('DB_HOST','ep-silent-sun-afd0euia-pooler.c-2.us-west-2.aws.neon.tech'); /
 define('DB_NAME','neondb');
 define('DB_USER','neondb_owner');
 define('DB_PASS','npg_80WARUtcIvxF');
-define('DB_PORT','5432');
-define('DB_SCHEMA','public');
+define('DB_CHARSET', 'UTF-8');
 ?>
