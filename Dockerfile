@@ -8,7 +8,7 @@ RUN set -eux; \
     ca-certificates curl build-essential \
     libpq-dev libxml2-dev zlib1g-dev \
     libjpeg62-turbo-dev libfreetype6-dev libpng-dev \
-    libzip-dev unzip; \
+    libzip-dev libonig-dev unzip; \
   docker-php-ext-install mbstring xml zip; \
   docker-php-ext-install pgsql pdo_pgsql; \
   docker-php-ext-configure gd --with-freetype --with-jpeg; \
