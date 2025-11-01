@@ -24,6 +24,10 @@ RUN a2enmod headers && \
     printf 'SetEnvIf X-Forwarded-Proto "^https$" HTTPS=on\n' > /etc/apache2/conf-available/forwarded-https.conf && \
     a2enconf forwarded-https
 
+# Copiar configuración para pasar variables de entorno a PHP
+COPY apache-env.conf /etc/apache2/conf-available/apache-env.conf
+RUN a2enconf apache-env
+
 # Zona horaria de PHP
 RUN echo "date.timezone = America/La_Paz" > /usr/local/etc/php/conf.d/timezone.ini
 
