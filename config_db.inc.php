@@ -16,6 +16,6 @@ define('DB_TABLE_PREFIX','');
 define('DB_CHARSET','UTF-8');
 
 // Fuerza SSL + endpoint para libpq viejo (PHP 5.6)
-putenv('PGSSLMODE=' . (getenv('PGSSLMODE') ?: 'require'));
-putenv('PGOPTIONS=' . (getenv('PGOPTIONS') ?: 'endpoint=ep-silent-sun-afd0euia'));
+putenv('PGSSLMODE=require');
+putenv('PGOPTIONS=endpoint=ep-silent-sun-afd0euia');
 ?>
