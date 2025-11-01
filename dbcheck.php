@@ -1,22 +1,15 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+$host     = getenv('TL_DB_HOST');
+$port     = getenv('TL_DB_PORT') ?: '5432';
+$dbname   = getenv('TL_DB_NAME');
+$user     = getenv('TL_DB_USER');
+$pass     = getenv('TL_DB_PASS');
+$endpoint = 'ep-silent-sun-afd0euia'; // sin "-pooler"
 
-/* Fuerza SSL y pasa el endpoint a libpq (tu libpq no soporta SNI) */
-putenv('PGSSLMODE=require');
-putenv('PGOPTIONS=endpoint=ep-silent-sun-afd0euia');  // <-- SIN %3D
+$conn_str = "host=$host port=$port dbname=$dbname user=$user password=$pass ".
+            "sslmode=require options='endpoint=$endpoint'";
 
-$host='ep-silent-sun-afd0euia.c-2.us-west-2.aws.neon.tech';
-$dsn="host=$host port=5432 dbname=neondb user=neondb_owner password=<...> sslmode=require options=endpoint=ep-silent-sun-afd0euia";
-
-$dbname = 'neondb';
-$user   = 'neondb_owner';
-$pass   = 'TU_PASSWORD_MD5'; // la contraseña que ya convertiste a md5 en Neon
-
-$conn = pg_connect($dsn);
-if (!$conn) {
-  die('ERROR --> ' . pg_last_error());
-}
-
-$r = pg_query($conn, "select version(), current_user, current_database()");
-var_dump(pg_fetch_row($r));
+$c = @pg_connect($conn_str);
+if(!$c){ echo "ERROR --> " . @pg_last_error(); exit; }
+$r = pg_query($c,"select version()");
+echo "OK: " . pg_fetch_result($r,0,0);

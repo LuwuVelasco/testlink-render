@@ -8,17 +8,14 @@ define('DB_PASS','DeNQsKmanqf3LSbzo4TwO40wy0UbWyHf');
 define('DB_TABLE_PREFIX',''); // usualmente vacío*/
 // Conexión a PostgreSQL en Neon
 define('DB_TYPE','pgsql');
-
-$host = getenv('TL_DB_HOST') ?: 'ep-silent-sun-afd0euia-pooler.c-2.us-west-2.aws.neon.tech';
-$name = getenv('TL_DB_NAME') ?: 'neondb';
-$user = getenv('TL_DB_USER') ?: 'neondb_owner';
-$pass = getenv('TL_DB_PASS') ?: 'npg_80WARUtcIvxF';
-
-define('DB_HOST', $host);
-define('DB_NAME', $name);
-define('DB_USER', $user);
-define('DB_PASS', $pass);
-
+define('DB_HOST', getenv('TL_DB_HOST'));
+define('DB_NAME', getenv('TL_DB_NAME'));
+define('DB_USER', getenv('TL_DB_USER'));
+define('DB_PASS', getenv('TL_DB_PASS'));
 define('DB_TABLE_PREFIX','');
 define('DB_CHARSET','UTF-8');
+
+// Fuerza SSL + endpoint para libpq viejo (PHP 5.6)
+putenv('PGSSLMODE=' . (getenv('PGSSLMODE') ?: 'require'));
+putenv('PGOPTIONS=' . (getenv('PGOPTIONS') ?: 'endpoint=ep-silent-sun-afd0euia'));
 ?>

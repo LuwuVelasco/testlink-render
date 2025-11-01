@@ -7,22 +7,21 @@ services:
     envVars:
       - key: TL_TIMEZONE
         value: America/La_Paz
-
-      # libpq viejo necesita SSL y el endpoint explícito
       - key: PGSSLMODE
         value: require
-      - key: PGOPTIONS                  # OJO: que coincida con el host elegido
-        value: endpoint=ep-silent-sun-afd0euia-pooler
-
-      # (Opcional pero recomendable) pasar credenciales por env y no hardcode
+      - key: PGOPTIONS
+        value: endpoint=ep-silent-sun-afd0euia
       - key: TL_DB_HOST
         value: ep-silent-sun-afd0euia-pooler.c-2.us-west-2.aws.neon.tech
+      - key: TL_DB_PORT
+        value: 5432
       - key: TL_DB_NAME
         value: neondb
       - key: TL_DB_USER
         value: neondb_owner
       - key: TL_DB_PASS
-        fromSecret: TL_DB_PASS   # crea este Secret en Render y pon la contraseña de Neon
+        fromSecret: TL_DB_PASS
+# sin sección "databases:"
 
 #services:
 #  - type: web
