@@ -26,3 +26,5 @@ ini_set('session.cookie_samesite','Lax');
 ini_set('session.gc_maxlifetime','54000');
 ini_set('session.cache_expire','900');
 ini_set('session.save_path','/tmp');
+putenv('PGSSLMODE=require');
+putenv('PGOPTIONS=endpoint=ep-silent-sun-afd0euia');
