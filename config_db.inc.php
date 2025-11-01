@@ -7,10 +7,11 @@ define('DB_USER','testlink_db_user');
 define('DB_PASS','DeNQsKmanqf3LSbzo4TwO40wy0UbWyHf');
 define('DB_TABLE_PREFIX',''); // usualmente vacío*/
 // Conexión a PostgreSQL en Neon
-define('DB_TYPE','pgsql');
-define('DB_HOST','ep-silent-sun-afd0euia-pooler.c-2.us-west-2.aws.neon.tech:5432');
-define('DB_NAME','neondb');
-define('DB_USER','neondb_owner');
-define('DB_PASS','npg_80WARUtcIvxF');
+define('DB_TYPE', 'pgsql');
+define('DB_HOST', 'host=ep-silent-sun-afd0euia-pooler.c-2.us-west-2.aws.neon.tech port=5432 sslmode=require');
+define('DB_NAME', 'neondb');
+define('DB_USER', 'neondb_owner');
+define('DB_PASS', 'npg_80WARUtcIvxF');
 define('DB_TABLE_PREFIX','');
+define('DB_PERSISTENCY',false);
 ?>
