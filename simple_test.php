@@ -25,10 +25,20 @@ echo "pgsql: " . (extension_loaded('pgsql') ? '✅ Cargada' : '❌ NO cargada') 
 echo "pdo_pgsql: " . (extension_loaded('pdo_pgsql') ? '✅ Cargada' : '❌ NO cargada') . "<br>";
 echo "PHP version: " . phpversion() . "<br>";
 
+// Obtener endpoint para Neon
+$pgoptions = getenv('PGOPTIONS') ?: '';
+$endpoint = str_replace('endpoint=', '', $pgoptions);
+
+echo "PGOPTIONS: <code>$pgoptions</code><br>";
+echo "Endpoint: <code>$endpoint</code><br>";
+
 // Test 1: PDO (más moderno)
 echo "<h3>3. Test con PDO:</h3>";
 try {
     $dsn = "pgsql:host=$host;port=$port;dbname=$dbname;sslmode=require";
+    if (!empty($endpoint)) {
+        $dsn .= ";options='endpoint=$endpoint'";
+    }
     echo "DSN: <code>$dsn</code><br>";
     
     $pdo = new PDO($dsn, $user, $pass, [
@@ -52,6 +62,9 @@ try {
 // Test 2: pg_connect (legacy)
 echo "<h3>4. Test con pg_connect:</h3>";
 $conn_str = "host=$host port=$port dbname=$dbname user=$user password=$pass sslmode=require";
+if (!empty($endpoint)) {
+    $conn_str .= " options='endpoint=$endpoint'";
+}
 echo "Connection string: <code>" . str_replace($pass, '***', $conn_str) . "</code><br>";
 
 $conn = @pg_connect($conn_str);

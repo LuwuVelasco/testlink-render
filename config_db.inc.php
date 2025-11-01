@@ -28,27 +28,34 @@ if (empty($db_host) || empty($db_name) || empty($db_user) || empty($db_pass)) {
     die('ERROR: Variables de entorno de base de datos no están definidas correctamente');
 }
 
-// Para Neon con PHP 7.4, incluir el puerto en el host
-define('DB_HOST', $db_host . ':' . $db_port);
+// Para Neon, necesitamos construir el connection string con opciones especiales
+// Obtener endpoint
+$pg_options = getenv('PGOPTIONS') ?: '';
+$endpoint = str_replace('endpoint=', '', $pg_options);
+
+// Definir constantes para TestLink
 define('DB_NAME', $db_name);
 define('DB_USER', $db_user);
 define('DB_PASS', $db_pass);
 define('DB_TABLE_PREFIX','');
 define('DB_CHARSET','UTF-8');
 
-// Configurar SSL para Neon
-putenv('PGSSLMODE=require');
-
-// Con PHP 7.4 y libpq moderno, podemos usar PGOPTIONS para el endpoint de Neon
-$pg_options = getenv('PGOPTIONS');
-if (!empty($pg_options)) {
-    // Asegurar formato correcto
-    if (strpos($pg_options, 'endpoint=') !== 0) {
-        $pg_options = 'endpoint=' . $pg_options;
-    }
-    putenv('PGOPTIONS=' . $pg_options);
+// Para ADODB con Neon, usar connection string completo con endpoint
+// ADODB postgres8 soporta opciones en el host
+if (!empty($endpoint)) {
+    // Formato: host=xxx port=xxx options='endpoint=yyy'
+    define('DB_HOST', "host=$db_host port=$db_port options='endpoint=$endpoint' sslmode=require");
+} else {
+    // Fallback sin endpoint
+    define('DB_HOST', $db_host . ':' . $db_port);
 }
 
-// DSN para ADODB (no usado por defecto)
+// Configurar SSL para Neon en variables de entorno (para funciones pg_* nativas)
+putenv('PGSSLMODE=require');
+if (!empty($endpoint)) {
+    putenv('PGOPTIONS=endpoint=' . $endpoint);
+}
+
+// DSN para ADODB (no usado por defecto pero disponible)
 define('DSN', false);
 ?>
