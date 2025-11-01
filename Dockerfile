@@ -8,7 +8,8 @@ RUN set -eux; \
     ca-certificates curl build-essential \
     libpq-dev libxml2-dev zlib1g-dev \
     libjpeg62-turbo-dev libfreetype6-dev libpng-dev \
-    libzip-dev libonig-dev unzip; \
+    libzip-dev libonig-dev unzip libssl-dev; \
+  update-ca-certificates; \
   docker-php-ext-install mbstring xml zip; \
   docker-php-ext-install pgsql pdo_pgsql; \
   docker-php-ext-configure gd --with-freetype --with-jpeg; \
@@ -34,6 +35,10 @@ RUN { \
   echo 'post_max_size = 32M'; \
   echo 'memory_limit = 256M'; \
   echo 'max_execution_time = 120'; \
+  echo 'error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE'; \
+  echo 'display_errors = Off'; \
+  echo 'log_errors = On'; \
+  echo 'error_log = /var/www/html/logs/php_errors.log'; \
 } > /usr/local/etc/php/conf.d/zz-overrides.ini
 
 # Copia el código de TestLink

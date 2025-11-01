@@ -14,7 +14,7 @@ define('DB_PASS','DeNQsKmanqf3LSbzo4TwO40wy0UbWyHf');
 define('DB_TABLE_PREFIX',''); // usualmente vacío*/
 
 // Conexión a PostgreSQL en Neon con PHP 7.4
-define('DB_TYPE','postgres9'); // Usar postgres9 para PHP 7.4+
+define('DB_TYPE','postgres8'); // Usar postgres8 (postgres9 no existe en TestLink 1.9.0)
 
 // Obtener variables de entorno
 $db_host = getenv('TL_DB_HOST');
