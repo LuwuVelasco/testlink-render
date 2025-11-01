@@ -7,12 +7,38 @@ services:
     envVars:
       - key: TL_TIMEZONE
         value: America/La_Paz
-      - key: DATABASE_URL
-        fromDatabase:
-          name: testlink-db
-          property: connectionString   # <-- válido
 
-databases:
-  - name: testlink-db
-    plan: free
-    region: oregon
+      # libpq viejo necesita SSL y el endpoint explícito
+      - key: PGSSLMODE
+        value: require
+      - key: PGOPTIONS                  # OJO: que coincida con el host elegido
+        value: endpoint=ep-silent-sun-afd0euia-pooler
+
+      # (Opcional pero recomendable) pasar credenciales por env y no hardcode
+      - key: TL_DB_HOST
+        value: ep-silent-sun-afd0euia-pooler.c-2.us-west-2.aws.neon.tech
+      - key: TL_DB_NAME
+        value: neondb
+      - key: TL_DB_USER
+        value: neondb_owner
+      - key: TL_DB_PASS
+        fromSecret: TL_DB_PASS   # crea este Secret en Render y pon la contraseña de Neon
+
+#services:
+#  - type: web
+#    name: testlink-web
+#    runtime: docker
+#    plan: free
+#    region: oregon
+#    envVars:
+#      - key: TL_TIMEZONE
+#        value: America/La_Paz
+#      - key: DATABASE_URL
+#        fromDatabase:
+#          name: testlink-db
+#          property: connectionString   # <-- válido
+
+#databases:
+#  - name: testlink-db
+#    plan: free
+#    region: oregon

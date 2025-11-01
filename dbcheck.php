@@ -6,14 +6,12 @@ ini_set('display_errors', 1);
 putenv('PGSSLMODE=require');
 putenv('PGOPTIONS=endpoint=ep-silent-sun-afd0euia');  // <-- SIN %3D
 
-$host   = 'ep-silent-sun-afd0euia.c-2.us-west-2.aws.neon.tech'; // puedes usar el -pooler también
+$host='ep-silent-sun-afd0euia.c-2.us-west-2.aws.neon.tech';
+$dsn="host=$host port=5432 dbname=neondb user=neondb_owner password=<...> sslmode=require options=endpoint=ep-silent-sun-afd0euia";
+
 $dbname = 'neondb';
 $user   = 'neondb_owner';
 $pass   = 'TU_PASSWORD_MD5'; // la contraseña que ya convertiste a md5 en Neon
-
-// IMPORTANTE: nada de URL encoding aquí
-$dsn = "host={$host} port=5432 dbname={$dbname} user={$user} password={$pass} ".
-       "sslmode=require options=endpoint=ep-silent-sun-afd0euia";
 
 $conn = pg_connect($dsn);
 if (!$conn) {
